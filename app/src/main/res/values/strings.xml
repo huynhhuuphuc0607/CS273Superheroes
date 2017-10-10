@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CS 273 Superheroes</string>
+    <string name="question">Question %1$d out of %2$d</string>
+    <string name="results">%1$d guesses, %2$.01f%% correct</string>
+    <string name="reset_quiz">Reset Quiz</string>
+    <string name="incorrect_answer">Incorrect!</string>
+</resources>
