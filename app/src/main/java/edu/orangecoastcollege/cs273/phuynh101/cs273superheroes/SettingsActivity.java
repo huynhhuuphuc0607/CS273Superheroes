@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * Settings Activity
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -19,6 +22,9 @@ public class SettingsActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * Settings activity fragment to populate the preference screen
+     */
     public static class SettingsActivityFragment extends PreferenceFragment {
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {

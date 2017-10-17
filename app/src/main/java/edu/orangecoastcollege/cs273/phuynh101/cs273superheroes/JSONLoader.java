@@ -16,8 +16,17 @@ import java.util.List;
  * Created by HuynhHuu on 10-Oct-17.
  */
 
+/**
+ * JSON Loader
+ */
 public class JSONLoader {
 
+    /**
+     * load JSon from asset and return a list of superheroes
+     * @param context the context to get asset manager
+     * @return the list of superheroes
+     * @throws IOException
+     */
     public static List<Superhero> loadJSONFromAsset(Context context) throws IOException
     {
         List<Superhero> allSuperHeroesList = new ArrayList<>();
