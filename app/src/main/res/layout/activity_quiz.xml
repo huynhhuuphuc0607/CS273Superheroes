@@ -43,13 +43,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:elevation="2dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:onClick="makeGuess"/>
 
         <Button
             android:id="@+id/button2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_weight="1"
+            android:elevation="2dp"
             android:onClick="makeGuess"/>
     </LinearLayout>
 
@@ -61,14 +65,18 @@
             android:id="@+id/button3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_weight="1"
+            android:elevation="2dp"
             android:onClick="makeGuess"/>
 
         <Button
             android:id="@+id/button4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_weight="1"
+            android:elevation="2dp"
             android:onClick="makeGuess"/>
     </LinearLayout>
 

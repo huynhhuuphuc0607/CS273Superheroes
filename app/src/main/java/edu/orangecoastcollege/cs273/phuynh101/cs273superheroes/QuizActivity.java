@@ -1,6 +1,8 @@
 package edu.orangecoastcollege.cs273.phuynh101.cs273superheroes;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -9,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,6 +42,8 @@ public class QuizActivity extends AppCompatActivity {
     private ImageView mSuperheroImageView;
     private TextView mAnswerTextView;
 
+    private String mQuizType;
+    private List<Superhero> mFilteredSuperheroesList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,10 +89,10 @@ public class QuizActivity extends AppCompatActivity {
                 mSuperheroList.add(randomSuperhero);
         }
 
-        loadNextFlag();
+        loadNextSuperheroAvatar();
     }
 
-    private void loadNextFlag() {
+    private void loadNextSuperheroAvatar() {
         mCorrectSuperhero = mSuperheroList.remove(0);
 
         mAnswerTextView.setText("");
@@ -135,14 +141,14 @@ public class QuizActivity extends AppCompatActivity {
 
             mCorrectGuesses++;
             mAnswerTextView.setTextColor(ContextCompat.getColor(this,R.color.correct_answer));
-            mAnswerTextView.setText(mCorrectSuperhero.getName());
+            mAnswerTextView.setText(mCorrectSuperhero.getName() + "!");
 
             if(mCorrectGuesses < SUPERHEROES_IN_QUIZ)
             {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        loadNextFlag();
+                        loadNextSuperheroAvatar();
                     }
                 }, 2000);
             }else
@@ -165,4 +171,25 @@ public class QuizActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent mIntent = new Intent(this, SettingsActivity.class);
+        startActivity(mIntent);
+        return super.onOptionsItemSelected(item);
+    }
+
+    SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            mQuizType = sharedPreferences.getString("pref_quizType", "Superhero Name");
+            resetQuiz();
+        }
+    };
 }

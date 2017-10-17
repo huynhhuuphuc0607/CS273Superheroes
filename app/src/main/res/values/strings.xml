@@ -3,5 +3,7 @@
     <string name="question">Question %1$d out of %2$d</string>
     <string name="results">%1$d guesses, %2$.01f%% correct</string>
     <string name="reset_quiz">Reset Quiz</string>
-    <string name="incorrect_answer">Incorrect!</string>
+    <string name="incorrect_answer">Incorrect Guess!</string>
+    <string name="title">Quiz Type</string>
+    <string name="summary">Choose superhero name, superpower or one thing about them</string>
 </resources>
