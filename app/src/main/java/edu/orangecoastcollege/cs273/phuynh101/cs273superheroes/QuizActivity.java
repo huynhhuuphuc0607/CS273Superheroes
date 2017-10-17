@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;;
 
+/**
+ * Quiz Activity
+ */
 public class QuizActivity extends AppCompatActivity {
     private static final int SUPERHEROES_IN_QUIZ = 10;
     public static final String TAG = QuizActivity.class.getSimpleName();
@@ -43,11 +48,20 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mAnswerTextView;
 
     private String mQuizType;
-    private List<Superhero> mFilteredSuperheroesList;
+    private String[] answers;
+
+    /**
+     * establishes connections from Model to Controller
+     * and from View to Controller
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
 
         mSuperheroList = new ArrayList<>(SUPERHEROES_IN_QUIZ);
         rng = new SecureRandom();
@@ -68,9 +82,14 @@ public class QuizActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(TAG, "Error loading JSON file");
         }
+
+        mQuizType = preferences.getString("pref_quizType", "Superhero Name");
         resetQuiz();
     }
 
+    /**
+     * restart the quiz
+     */
     public void resetQuiz() {
         mTotalGuesses = 0;
         mCorrectGuesses = 0;
@@ -118,14 +137,18 @@ public class QuizActivity extends AppCompatActivity {
 
         for(int i = 0; i < mButtons.length; i++)
         {
-            mButtons[i].setText(mAllSuperheroesList.get(i).getName());
+            mButtons[i].setText(populateCorrespondingAnswer(mAllSuperheroesList.get(i)));
             mButtons[i].setEnabled(true);
         }
 
-        mButtons[rng.nextInt(mButtons.length)].setText(mCorrectSuperhero.getName());
+        mButtons[rng.nextInt(mButtons.length)].setText(populateCorrespondingAnswer(mCorrectSuperhero));
 
     }
 
+    /**
+     * check if the user choose the correct answer
+     * @param v the button that the user clicked
+     */
     public void makeGuess(View v)
     {
         mTotalGuesses++;
@@ -134,14 +157,14 @@ public class QuizActivity extends AppCompatActivity {
 
         String guess = clickedButton.getText().toString();
 
-        if(guess.equals(mCorrectSuperhero.getName()))
+        if(guess.equals(populateCorrespondingAnswer(mCorrectSuperhero)))
         {
             for(Button b : mButtons)
                 b.setEnabled(false);
 
             mCorrectGuesses++;
             mAnswerTextView.setTextColor(ContextCompat.getColor(this,R.color.correct_answer));
-            mAnswerTextView.setText(mCorrectSuperhero.getName() + "!");
+            mAnswerTextView.setText(populateCorrespondingAnswer(mCorrectSuperhero) + "!");
 
             if(mCorrectGuesses < SUPERHEROES_IN_QUIZ)
             {
@@ -172,12 +195,22 @@ public class QuizActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * create menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_settings,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * handle the event when the user click the settings icon
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent mIntent = new Intent(this, SettingsActivity.class);
@@ -190,6 +223,25 @@ public class QuizActivity extends AppCompatActivity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             mQuizType = sharedPreferences.getString("pref_quizType", "Superhero Name");
             resetQuiz();
+            Toast.makeText(QuizActivity.this, R.string.restarting_quiz,Toast.LENGTH_SHORT).show();
         }
     };
+
+    /**
+     * populate the corresponding answer based on the quiz type
+     * @param hero the object that provides the answer
+     * @return the answer
+     */
+    private String populateCorrespondingAnswer(Superhero hero)
+    {
+        switch(mQuizType)
+        {
+            case "Superpower":
+                return hero.getSuperpower();
+            case "One Thing":
+                return hero.getOneThing();
+            default:
+                return hero.getName();
+        }
+    }
 }

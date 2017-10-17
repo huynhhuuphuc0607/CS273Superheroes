@@ -6,4 +6,5 @@
     <string name="incorrect_answer">Incorrect Guess!</string>
     <string name="title">Quiz Type</string>
     <string name="summary">Choose superhero name, superpower or one thing about them</string>
+    <string name="restarting_quiz">Quiz will restart with your new settings</string>
 </resources>
